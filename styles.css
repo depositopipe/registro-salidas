@@ -6,46 +6,55 @@
 }
 
 body {
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    background: #0f172a;
     color: #f8fafc;
     min-height: 100vh;
+}
+
+.login-container {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-/* Pantalla Login */
-.login-container {
-    width: 100%;
-    max-width: 400px;
+    min-height: 100vh;
     padding: 20px;
 }
 
 .login-box {
     background: #1e293b;
-    padding: 30px;
+    padding: 40px;
     border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    width: 100%;
+    max-width: 400px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 20px;
     border: 1px solid #334155;
 }
 
 .login-box h2 {
     text-align: center;
     color: #38bdf8;
-    margin-bottom: 10px;
 }
 
-input, select {
-    width: 100%;
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    font-size: 14px;
+    color: #94a3b8;
+}
+
+input {
     padding: 12px;
     border-radius: 6px;
     border: 1px solid #475569;
     background: #0f172a;
-    color: #f8fafc;
-    font-size: 14px;
+    color: #fff;
+    font-size: 16px;
 }
 
 input:focus {
@@ -54,179 +63,120 @@ input:focus {
 }
 
 button {
-    cursor: pointer;
-    padding: 10px 15px;
+    padding: 12px;
     border-radius: 6px;
     border: none;
     font-weight: 600;
+    cursor: pointer;
     transition: background 0.2s;
 }
 
 .btn-primary { background: #0284c7; color: white; }
 .btn-primary:hover { background: #0369a1; }
 
-.btn-secondary { background: #475569; color: white; font-size: 12px; }
-.btn-secondary:hover { background: #334155; }
-
-.btn-danger { background: #ef4444; color: white; font-size: 12px; }
-.btn-danger:hover { background: #dc2626; }
-
-.btn-success { background: #10b981; color: white; width: 100%; }
-.btn-success:hover { background: #059669; }
-
-/* Aplicación Principal */
-.app-container {
-    width: 100%;
-    max-width: 800px;
-    min-height: 90vh;
-    background: #1e293b;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+.dashboard-container {
     display: flex;
     flex-direction: column;
-    overflow: hidden;
-    border: 1px solid #334155;
-    margin: 20px;
+    min-height: 100vh;
 }
 
 .app-header {
-    background: #0f172a;
-    padding: 15px 20px;
+    background: #1e293b;
+    padding: 20px 40px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid #334155;
-}
-
-.app-header h1 {
-    font-size: 1.2rem;
-    color: #38bdf8;
 }
 
 .user-info {
     display: flex;
     align-items: center;
-    gap: 10px;
-    font-size: 13px;
+    gap: 15px;
 }
 
-/* Navbar / Menú hamburguesa */
-.navbar {
-    background: #334155;
+.app-menu {
+    background: #1e293b;
+    padding: 10px 40px;
+    display: flex;
+    gap: 15px;
+    border-bottom: 1px solid #334155;
+}
+
+.menu-btn {
+    background: #0284c7;
+    color: white;
+    border: none;
     padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
 }
 
-.menu-toggle {
-    background: #0284c7;
-    color: white;
-    display: block;
-    width: 100%;
-    text-align: left;
-    padding: 8px 12px;
-    border-radius: 4px;
+.menu-btn:hover { background: #0369a1; }
+
+.btn-secondary { background: #475569; color: white; }
+.btn-secondary:hover { background: #334155; }
+
+.btn-danger { background: #ef4444; color: white; }
+.btn-danger:hover { background: #dc2626; }
+
+.main-content {
+    padding: 40px;
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 40px;
 }
 
-.dropdown-menu {
-    list-style: none;
-    display: none;
-    flex-direction: column;
-    gap: 5px;
-    margin-top: 10px;
+.panel-card {
+    background: #1e293b;
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid #334155;
+    height: fit-content;
 }
 
-.dropdown-menu.show {
-    display: flex;
+.panel-card h3 {
+    color: #38bdf8;
+    margin-bottom: 20px;
 }
 
-.nav-item {
-    background: transparent;
-    color: #cbd5e1;
-    width: 100%;
-    text-align: left;
-    padding: 8px;
-    border-radius: 4px;
-}
-
-.nav-item:hover, .nav-item.active {
-    background: #0284c7;
-    color: white;
-}
-
-.content-body {
-    padding: 20px;
-    flex: 1;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.section-panel {
+#form-pedido {
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
 
-.section-panel h3 {
-    font-size: 1rem;
-    color: #38bdf8;
-    border-bottom: 1px solid #334155;
-    padding-bottom: 5px;
-}
+.btn-success { background: #10b981; color: white; }
+.btn-success:hover { background: #059669; }
 
-#form-salida, #form-crear-usuario {
-    display: flex;
-    gap: 10px;
-}
-
-.data-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 14px;
-}
-
-.data-table th, .data-table td {
-    padding: 10px;
-    text-align: left;
-}
-
-.data-table th {
-    background: #0f172a;
-    color: #94a3b8;
-}
-
-.history-list {
-    list-style: none;
+.content-sections {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 20px;
+    width: 100%;
 }
 
-.item-row {
-    background: #0f172a;
-    padding: 12px;
-    border-radius: 8px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.tabla-contenedor {
+    background: #1e293b;
+    padding: 30px;
+    border-radius: 12px;
     border: 1px solid #334155;
 }
 
-.item-name {
-    font-weight: bold;
-    color: #f8fafc;
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
 }
 
-.stock-badge {
-    background: #ef4444;
-    color: white;
-    padding: 4px 8px;
-    border-radius: 6px;
-    font-weight: bold;
-    font-size: 13px;
+th, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #334155;
 }
 
-.filters-bar {
-    display: flex;
-    gap: 10px;
+th {
+    color: #94a3b8;
+    background: #0f172a;
 }

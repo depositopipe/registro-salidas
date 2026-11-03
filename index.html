@@ -3,116 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Salidas e Inventario</title>
-    <!-- Tus estilos CSS -->
+    <title>Control de Inventario - Acceso</title>
     <link rel="stylesheet" href="styles.css">
-    
-    <!-- Firebase App (Core SDK) -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <!-- Firebase Firestore SDK -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 </head>
 <body>
-
-    <!-- Pantalla de Login -->
-    <div id="login-screen" class="login-container">
+    <div class="login-container">
         <form id="form-login" class="login-box">
             <h2>Iniciar Sesión</h2>
-            <input type="text" id="input-usuario" placeholder="Usuario (ej. pipe)" required autocomplete="username">
-            <input type="password" id="input-password" placeholder="Contraseña" required autocomplete="current-password">
-            <button type="submit" class="btn-primary">Entrar</button>
+            <div class="form-group">
+                <label for="input-email">Correo Electrónico</label>
+                <input type="email" id="input-email" required placeholder="tu@correo.com">
+            </div>
+            <div class="form-group">
+                <label for="input-password">Contraseña</label>
+                <input type="password" id="input-password" required placeholder="••••••••">
+            </div>
+            <button type="submit" class="btn-primary">Ingresar al Sistema</button>
         </form>
     </div>
-
-    <!-- Aplicación Principal (Oculta por defecto hasta iniciar sesión) -->
-    <div id="main-app" class="app-container" style="display: none;">
-        <header class="app-header">
-            <h1>Registro de Salidas</h1>
-            <div class="user-info">
-                <span id="user-display">Usuario</span>
-                <button id="btn-cambiar-pass" class="btn-secondary">Cambiar Clave</button>
-                <button id="btn-logout" class="btn-danger">Salir</button>
-            </div>
-        </header>
-
-        <!-- Menú de navegación / Hamburguesa -->
-        <nav class="navbar">
-            <button class="menu-toggle" onclick="toggleMenu()">☰ Menú</button>
-            <ul id="dropdown-menu" class="dropdown-menu">
-                <li><button class="nav-item active" onclick="cambiarSeccion('salidas')">Salidas y Hoy</button></li>
-                <li><button class="nav-item" onclick="cambiarSeccion('historial')">Historial General</button></li>
-                <li id="menu-admin-usuarios" style="display: none;"><button class="nav-item" onclick="cambiarSeccion('usuarios')">Gestionar Usuarios</button></li>
-            </ul>
-        </nav>
-
-        <main class="content-body">
-            <!-- Sección Salidas -->
-            <section id="seccion-salidas" class="section-panel">
-                <h3>Registrar Nueva Salida</h3>
-                <form id="form-salida">
-                    <input type="text" id="producto-nombre" placeholder="Nombre del producto" required>
-                    <input type="number" id="cantidad-salida" value="1" min="1" required>
-                    <button type="submit" class="btn-success">Registrar Salida</button>
-                </form>
-
-                <h3>Resumen de Hoy</h3>
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Producto</th>
-                            <th style="text-align: right;">Total Retirado</th>
-                        </tr>
-                    </thead>
-                    <tbody id="body-totales">
-                        <!-- Dinámico -->
-                    </tbody>
-                </table>
-
-                <h3>Historial del Día</h3>
-                <ul id="lista-historial-hoy" class="history-list">
-                    <!-- Dinámico -->
-                </ul>
-            </section>
-
-            <!-- Sección Historial General -->
-            <section id="seccion-historial" class="section-panel" style="display: none;">
-                <h3>Historial General de Salidas</h3>
-                <div class="filters-bar">
-                    <input type="text" id="buscar-nombre" placeholder="Buscar por producto..." oninput="filtrarHistorialGeneral()">
-                    <input type="date" id="filtro-fecha" onchange="filtrarHistorialGeneral()">
-                </div>
-                <ul id="lista-historial-general" class="history-list">
-                    <!-- Dinámico -->
-                </ul>
-            </section>
-
-            <!-- Sección Administración de Usuarios -->
-            <section id="seccion-usuarios" class="section-panel" style="display: none;">
-                <h3>Crear Nuevo Operador</h3>
-                <form id="form-crear-usuario">
-                    <input type="text" id="nuevo-user-nombre" placeholder="Nombre del operador" required>
-                    <input type="password" id="nuevo-user-pass" placeholder="Contraseña temporal" required>
-                    <button type="submit" class="btn-primary">Crear Operador</button>
-                </form>
-
-                <h3>Lista de Usuarios Registrados</h3>
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Rol</th>
-                            <th style="text-align: right;">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="body-usuarios-lista">
-                        <!-- Dinámico -->
-                    </tbody>
-                </table>
-            </section>
-        </main>
-    </div>
-
-    <!-- Archivo Principal de Lógica -->
-    <script src="app.js"></script>
+    <script type="module" src="app.js"></script>
 </body>
 </html>
