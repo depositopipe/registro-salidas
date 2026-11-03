@@ -107,22 +107,18 @@ formLogin.addEventListener('submit', async (e) => {
             usuarioActual = datosUsuario.nombre;
             rolActual = datosUsuario.rol;
         } else {
-            const snapshotUsuarios = await usuariosRef.get();
-            if (snapshotUsuarios.empty && userId === 'admin' && passwordIngresada === 'admin123') {
+          const snapshotUsuarios = await usuariosRef.get();
+            if (snapshotUsuarios.empty && userId === 'pipe' && passwordIngresada === 'tu_nueva_clave') {
                 await userDocRef.set({
-                    nombre: 'Admin',
-                    password: 'admin123',
+                    nombre: 'Pipe',
+                    password: '12345', 
                     rol: 'Administrador',
                     creado: firebase.firestore.FieldValue.serverTimestamp()
                 });
-                usuarioActual = 'Admin';
+                usuarioActual = 'Pipe';
                 rolActual = 'Administrador';
-                alert("¡Cuenta de Administrador inicial configurada exitosamente!");
-            } else {
-                alert("Usuario no registrado. Solicita tu acceso al Administrador.");
-                return;
+                alert("¡Cuenta de Administrador 'Pipe' configurada exitosamente!");
             }
-        }
 
         localStorage.setItem('usuario_salidas', usuarioActual);
         localStorage.setItem('rol_salidas', rolActual);
