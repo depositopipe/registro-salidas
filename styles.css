@@ -226,6 +226,7 @@ th {
 /* Diseño Adaptativo para Celulares y Tablets */
 @media (max-width: 900px) {
     .main-content {
+        /* Fuerza a que el formulario y la tabla se coloquen uno debajo del otro */
         grid-template-columns: 1fr;
         padding: 15px;
         gap: 20px;
@@ -245,12 +246,24 @@ th {
     .app-menu {
         padding: 12px 20px;
         justify-content: stretch;
+        flex-direction: column; /* Organiza los botones del menú y selector de fecha en columna en el celular */
+        align-items: stretch;
     }
 
     .menu-btn {
-        flex: 1;
+        width: 100%;
         text-align: center;
-        padding: 8px 10px;
-        font-size: 13px;
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .filtro-personalizado {
+        width: 100%;
+        justify-content: space-between;
+        margin-left: 0 !important;
+    }
+
+    .filtro-personalizado input {
+        flex: 1;
     }
 }
