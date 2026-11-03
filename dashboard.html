@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Salidas - Inventario</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Cabecera Principal -->
+        <header class="app-header">
+            <h1>Registro de Salidas</h1>
+            <div class="user-info">
+                <span id="user-email-display">Cargando...</span>
+                <button id="btn-exportar-purgar" class="btn-warning" title="Descarga el historial a tu PC y libera espacio">📥 Exportar y Limpiar</button>
+                <button id="btn-salir" class="btn-danger">Salir</button>
+            </div>
+        </header>
+
+        <!-- Menú de Navegación -->
+        <nav class="app-menu">
+            <button class="menu-btn active">Salidas y Hoy</button>
+            <button class="menu-btn">Historial General</button>
+        </nav>
+
+        <main class="main-content">
+            <!-- Formulario de Registro -->
+            <section class="panel-card">
+                <h3>Registrar Nueva Salida</h3>
+                <form id="form-pedido">
+                    <div class="form-group">
+                        <label>Nombre del producto</label>
+                        <input type="text" id="input-producto" required placeholder="Nombre del producto">
+                    </div>
+                    <div class="form-group">
+                        <label>Cantidad</label>
+                        <input type="number" id="input-cantidad" value="1" min="1" required>
+                    </div>
+                    <button type="submit" class="btn-success">Registrar Salida</button>
+                </form>
+            </section>
+
+            <!-- Sección de Historial -->
+            <div class="content-sections">
+                <section class="tabla-contenedor">
+                    <h3>Historial del Día</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Retirado por</th>
+                                <th>Fecha y Hora</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-registros-body">
+                            <!-- Los datos se cargan dinámicamente -->
+                        </tbody>
+                    </table>
+                </section>
+            </div>
+        </main>
+    </div>
+    <script type="module" src="dashboard.js"></script>
+</body>
+</html>
