@@ -1,4 +1,4 @@
-// Tus nuevas credenciales de Firebase
+// Tus credenciales de Firebase
 const firebaseConfig = {
     apiKey: "AIzaSyCAruwAlFxOf_MzN1LH6eYi-mZnfOMF2Ss",
     authDomain: "registro-de-salidas-4535e.firebaseapp.com",
@@ -14,7 +14,7 @@ if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
 
-// Inicializar Firebase Firestore
+// Inicializar Firebase Firestore (Declarado una sola vez)
 const db = firebase.firestore();
 const salidasRef = db.collection('salidas');
 const usuariosRef = db.collection('usuarios');
@@ -105,7 +105,7 @@ formLogin.addEventListener('submit', async (e) => {
             usuarioActual = datosUsuario.nombre;
             rolActual = datosUsuario.rol;
         } else {
-          const snapshotUsuarios = await usuariosRef.get();
+            const snapshotUsuarios = await usuariosRef.get();
             if (snapshotUsuarios.empty && userId === 'pipe' && passwordIngresada === 'tu_nueva_clave') {
                 await userDocRef.set({
                     nombre: 'Pipe',
