@@ -58,6 +58,38 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
+    // Lógica del botón Salir (Cerrar sesión)
+    const btnSalir = document.getElementById('btn-salir');
+    if (btnSalir) {
+        btnSalir.addEventListener('click', async () => {
+            const { error } = await supabase.auth.signOut();
+            if (error) {
+                alert('Error al cerrar sesión: ' + error.message);
+                return;
+            }
+            window.location.href = 'index.html';
+        });
+    }
+
+    // Lógica de los botones de navegación (Menú)
+    const btnMenuSalidas = document.getElementById('btn-menu-salidas');
+    const btnMenuHistorial = document.getElementById('btn-menu-historial');
+    const panelFormulario = document.querySelector('.panel-card');
+
+    if (btnMenuSalidas && btnMenuHistorial) {
+        btnMenuSalidas.addEventListener('click', () => {
+            btnMenuSalidas.classList.add('active');
+            btnMenuHistorial.classList.remove('active');
+            if (panelFormulario) panelFormulario.style.display = 'block';
+        });
+
+        btnMenuHistorial.addEventListener('click', () => {
+            btnMenuHistorial.classList.add('active');
+            btnMenuSalidas.classList.remove('active');
+            if (panelFormulario) panelFormulario.style.display = 'block';
+        });
+    }
+
     // Funcionalidad de Exportar y Purgar (Respaldo y limpieza de espacio)
     const btnExportarPurgar = document.getElementById('btn-exportar-purgar');
     if (btnExportarPurgar) {
