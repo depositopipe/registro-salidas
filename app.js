@@ -117,6 +117,7 @@ formLogin.addEventListener('submit', async (e) => {
                 rolActual = 'Administrador';
                 alert("¡Cuenta de Administrador 'Pipe' configurada exitosamente!");
             }
+        }
 
         localStorage.setItem('usuario_salidas', usuarioActual);
         localStorage.setItem('rol_salidas', rolActual);
