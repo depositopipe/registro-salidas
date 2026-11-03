@@ -4,178 +4,115 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Salidas e Inventario</title>
-    <link rel="stylesheet" href="styles.css?v=6">
-    <!-- Firebase SDK v8 -->
+    <!-- Tus estilos CSS -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Firebase App (Core SDK) -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <!-- Firebase Firestore SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 </head>
 <body>
 
-    <!-- PANTALLA DE LOGIN -->
+    <!-- Pantalla de Login -->
     <div id="login-screen" class="login-container">
-        <div class="login-card">
-            <h2>🔑 Acceso al Sistema</h2>
-            <form id="form-login">
-                <div class="form-group">
-                    <label for="input-usuario">Usuario</label>
-                    <input type="text" id="input-usuario" placeholder="Ej. darwin" required autocomplete="username">
-                </div>
-                <div class="form-group">
-                    <label for="input-password">Contraseña</label>
-                    <input type="password" id="input-password" placeholder="••••••••" required autocomplete="current-password">
-                </div>
-                <button type="submit" class="btn-primary">Ingresar al Sistema</button>
-            </form>
-        </div>
+        <form id="form-login" class="login-box">
+            <h2>Iniciar Sesión</h2>
+            <input type="text" id="input-usuario" placeholder="Usuario (ej. pipe)" required autocomplete="username">
+            <input type="password" id="input-password" placeholder="Contraseña" required autocomplete="current-password">
+            <button type="submit" class="btn-primary">Entrar</button>
+        </form>
     </div>
 
-    <!-- APLICACIÓN PRINCIPAL -->
-    <div id="main-app" class="app-layout" style="display: none;">
-        
-        <!-- BARRA SUPERIOR / MENÚ DESPLEGABLE -->
-        <header class="top-navbar">
-            <div class="nav-brand">
-                <button class="menu-toggle" onclick="toggleMenu()">☰</button>
-                <h3>📦 Inventario</h3>
-            </div>
-            <div class="nav-user-info">
-                <span id="user-display" class="user-badge"></span>
+    <!-- Aplicación Principal (Oculta por defecto hasta iniciar sesión) -->
+    <div id="main-app" class="app-container" style="display: none;">
+        <header class="app-header">
+            <h1>Registro de Salidas</h1>
+            <div class="user-info">
+                <span id="user-display">Usuario</span>
+                <button id="btn-cambiar-pass" class="btn-secondary">Cambiar Clave</button>
+                <button id="btn-logout" class="btn-danger">Salir</button>
             </div>
         </header>
 
-        <!-- MENÚ DESPLEGABLE (DRAWER / DROPDOWN) -->
-        <nav id="dropdown-menu" class="dropdown-menu">
-            <button class="nav-item active" onclick="cambiarSeccion('salidas')">📋 Registrar Salidas</button>
-            <button class="nav-item" onclick="cambiarSeccion('historial')">🔍 Historial y Buscador</button>
-            <button id="menu-admin-usuarios" class="nav-item" onclick="cambiarSeccion('usuarios')" style="display: none;">👥 Gestionar Usuarios</button>
-            <div class="menu-divider"></div>
-            <button id="btn-cambiar-pass" class="btn-secondary-small">🔒 Cambiar Clave</button>
-            <button id="btn-logout" class="btn-danger-small">🚪 Cerrar Sesión</button>
+        <!-- Menú de navegación / Hamburguesa -->
+        <nav class="navbar">
+            <button class="menu-toggle" onclick="toggleMenu()">☰ Menú</button>
+            <ul id="dropdown-menu" class="dropdown-menu">
+                <li><button class="nav-item active" onclick="cambiarSeccion('salidas')">Salidas y Hoy</button></li>
+                <li><button class="nav-item" onclick="cambiarSeccion('historial')">Historial General</button></li>
+                <li id="menu-admin-usuarios" style="display: none;"><button class="nav-item" onclick="cambiarSeccion('usuarios')">Gestionar Usuarios</button></li>
+            </ul>
         </nav>
 
-        <!-- CONTENIDO PRINCIPAL -->
-        <main class="main-content">
-            
-            <!-- SECCIÓN 1: SALIDAS Y RESUMEN -->
-            <section id="seccion-salidas" class="content-section">
-                <div class="content-header">
-                    <h2>Registro de Salidas (Hoy)</h2>
-                </div>
+        <main class="content-body">
+            <!-- Sección Salidas -->
+            <section id="seccion-salidas" class="section-panel">
+                <h3>Registrar Nueva Salida</h3>
+                <form id="form-salida">
+                    <input type="text" id="producto-nombre" placeholder="Nombre del producto" required>
+                    <input type="number" id="cantidad-salida" value="1" min="1" required>
+                    <button type="submit" class="btn-success">Registrar Salida</button>
+                </form>
 
-                <div class="card full-width" style="margin-bottom: 20px;">
-                    <h3>Nueva Salida</h3>
-                    <form id="form-salida">
-                        <div class="form-group">
-                            <label for="producto-nombre">Producto</label>
-                            <input type="text" id="producto-nombre" placeholder="Nombre del producto" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="cantidad-salida">Cantidad</label>
-                            <input type="number" id="cantidad-salida" value="1" min="1" required>
-                        </div>
-                        <button type="submit" class="btn-primary">Registrar Salida</button>
-                    </form>
-                </div>
+                <h3>Resumen de Hoy</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th style="text-align: right;">Total Retirado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="body-totales">
+                        <!-- Dinámico -->
+                    </tbody>
+                </table>
 
-                <div class="card full-width" style="margin-bottom: 20px;">
-                    <h3>Resumen del Día</h3>
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Producto</th>
-                                    <th style="text-align: right;">Cantidad Total</th>
-                                </tr>
-                            </thead>
-                            <tbody id="body-totales">
-                                <tr><td colspan="2" style="text-align: center; color: #64748b;">Cargando resumen...</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="card full-width">
-                    <h3>Movimientos Realizados Hoy</h3>
-                    <ul id="lista-historial-hoy" class="history-list">
-                        <li style="text-align:center; color:#64748b;">Cargando movimientos de hoy...</li>
-                    </ul>
-                </div>
+                <h3>Historial del Día</h3>
+                <ul id="lista-historial-hoy" class="history-list">
+                    <!-- Dinámico -->
+                </ul>
             </section>
 
-            <!-- SECCIÓN 2: HISTORIAL GENERAL CON BUSCADOR -->
-            <section id="seccion-historial" class="content-section" style="display: none;">
-                <div class="content-header">
-                    <h2>Historial y Buscador General</h2>
-                    <p style="color: #64748b; font-size: 14px;">Busca registros pasados filtrando por nombre de producto o por fecha.</p>
+            <!-- Sección Historial General -->
+            <section id="seccion-historial" class="section-panel" style="display: none;">
+                <h3>Historial General de Salidas</h3>
+                <div class="filters-bar">
+                    <input type="text" id="buscar-nombre" placeholder="Buscar por producto..." oninput="filtrarHistorialGeneral()">
+                    <input type="date" id="filtro-fecha" onchange="filtrarHistorialGeneral()">
                 </div>
-
-                <div class="card full-width" style="margin-bottom: 20px;">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="buscar-nombre">Buscar por Nombre:</label>
-                            <input type="text" id="buscar-nombre" placeholder="Ej. Cerveza Poker" oninput="filtrarHistorialGeneral()">
-                        </div>
-                        <div class="form-group">
-                            <label for="filtro-fecha">Filtrar por Fecha:</label>
-                            <input type="date" id="filtro-fecha" onchange="filtrarHistorialGeneral()">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card full-width">
-                    <h3>Resultados del Historial</h3>
-                    <ul id="lista-historial-general" class="history-list">
-                        <li style="text-align:center; color:#64748b;">Cargando historial...</li>
-                    </ul>
-                </div>
+                <ul id="lista-historial-general" class="history-list">
+                    <!-- Dinámico -->
+                </ul>
             </section>
 
-            <!-- SECCIÓN 3: GESTIÓN DE USUARIOS (Solo Admin) -->
-            <section id="seccion-usuarios" class="content-section" style="display: none;">
-                <div class="content-header">
-                    <h2>Gestión de Operadores</h2>
-                    <p style="color: #64748b; font-size: 14px;">Crea y elimina las cuentas de los operadores del sistema.</p>
-                </div>
+            <!-- Sección Administración de Usuarios -->
+            <section id="seccion-usuarios" class="section-panel" style="display: none;">
+                <h3>Crear Nuevo Operador</h3>
+                <form id="form-crear-usuario">
+                    <input type="text" id="nuevo-user-nombre" placeholder="Nombre del operador" required>
+                    <input type="password" id="nuevo-user-pass" placeholder="Contraseña temporal" required>
+                    <button type="submit" class="btn-primary">Crear Operador</button>
+                </form>
 
-                <div class="dashboard-grid">
-                    <div class="card">
-                        <h3>Registrar Nuevo Operador</h3>
-                        <form id="form-crear-usuario">
-                            <div class="form-group">
-                                <label for="nuevo-user-nombre">Nombre de Usuario</label>
-                                <input type="text" id="nuevo-user-nombre" placeholder="Ej. juan_perez" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="nuevo-user-pass">Contraseña Temporal</label>
-                                <input type="text" id="nuevo-user-pass" placeholder="Contraseña de acceso" required>
-                            </div>
-                            <button type="submit" class="btn-primary">Crear Operador</button>
-                        </form>
-                    </div>
-
-                    <div class="card">
-                        <h3>Usuarios Registrados</h3>
-                        <div class="table-container">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Usuario</th>
-                                        <th>Rol</th>
-                                        <th style="text-align: right;">Acción</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="body-usuarios-lista">
-                                    <tr><td colspan="3" style="text-align: center; color: #64748b;">Cargando usuarios...</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+                <h3>Lista de Usuarios Registrados</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Rol</th>
+                            <th style="text-align: right;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="body-usuarios-lista">
+                        <!-- Dinámico -->
+                    </tbody>
+                </table>
             </section>
-
         </main>
     </div>
 
+    <!-- Archivo Principal de Lógica -->
     <script src="app.js"></script>
 </body>
 </html>
