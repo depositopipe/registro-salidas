@@ -1,13 +1,16 @@
 import { supabase } from './supabaseClient.js';
 
-const loginForm = document.getElementById('loginForm'); // Asegúrate de que coincida con el id de tu formulario
+// ==========================================
+// 1. LÓGICA DE INICIO DE SESIÓN
+// ==========================================
+const loginForm = document.getElementById('loginForm');
 
 if (loginForm) {
   loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value.trim();
 
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -16,36 +19,39 @@ if (loginForm) {
       });
 
       if (error) {
-        alert('Credenciales incorrectas: ' + error.message);
+        alert('Credenciales incorrectas o error de conexión: ' + error.message);
         return;
       }
 
-      // Redirección relativa directa al dashboard
+      // Redirección directa al panel principal
       window.location.href = 'dashboard.html';
 
     } catch (err) {
-      console.error('Error en el proceso de autenticación:', err);
+      console.error('Error inesperado:', err);
       alert('Ocurrió un error inesperado al intentar ingresar.');
     }
   });
 }
 
-export async function verificarSesion() {
-    const { data: { session }, error } = await supabase.auth.getSession();
-    
-    if (error || !session) {
-        if (!window.location.href.includes('index.html')) {
-            window.location.href = 'index.html';
-        }
-        return null;
-    }
-    
-    return session.user;
-}
-
-if (btnSalir) {
-    btnSalir.addEventListener('click', async () => {
-        await supabase.auth.signOut();
-        window.location.href = 'index.html';
+// ==========================================
+// 2. LÓGICA DE REGISTRO DE NUEVOS USUARIOS (Opcional)
+// ==========================================
+export async function registrarUsuario(email, password) {
+  try {
+    const { data, error } = await supabase.auth.signUp({
+      email: email,
+      password: password,
     });
+
+    if (error) {
+      alert('Error al registrar: ' + error.message);
+      return false;
+    }
+
+    alert('¡Usuario registrado con éxito! Ya puede iniciar sesión.');
+    return true;
+  } catch (err) {
+    console.error('Error en el registro:', err);
+    return false;
+  }
 }
