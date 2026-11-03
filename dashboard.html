@@ -17,14 +17,16 @@
                 <button id="btn-salir" class="btn-danger">Salir</button>
             </div>
         </header>
-
-        <!-- Menú de Navegación y Filtros Temporales -->
-        <nav class="app-menu">
+        <!-- Menú de Filtros por Fecha -->
+        <nav class="app-menu" style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
             <button id="btn-menu-hoy" class="menu-btn">Hoy</button>
-            <button id="btn-menu-3dias" class="menu-btn">Últimos 3 Días</button>
-            <button id="btn-menu-semana" class="menu-btn">Última Semana</button>
-            <button id="btn-menu-mes" class="menu-btn">Último Mes</button>
             <button id="btn-menu-general" class="menu-btn active">Historial General</button>
+            
+            <div class="filtro-personalizado" style="display: flex; align-items: center; gap: 8px; margin-left: auto;">
+                <label style="font-size: 13px; color: #94a3b8;" for="input-fecha-filtro">Desde:</label>
+                <input type="date" id="input-fecha-filtro" style="padding: 6px 10px; font-size: 14px;">
+                <button id="btn-aplicar-filtro" class="menu-btn" style="background: #0284c7; border: none;">Filtrar</button>
+            </div>
         </nav>
 
         <main class="main-content">
