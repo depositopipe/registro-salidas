@@ -14,17 +14,19 @@ if (loginForm) {
 
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
-        email: email,
-        password: password,
-      });
+  email: email,
+  password: password,
+});
 
-      if (error) {
-        alert('Credenciales incorrectas o error de conexión: ' + error.message);
-        return;
-      }
+if (error) {
+  // Muestra el motivo exacto del fallo (ej: "Email not confirmed" o "Invalid login credentials")
+  alert('Error al ingresar: ' + error.message);
+  console.error('Detalle del error:', error);
+  return;
+}
 
-      // Redirección directa al panel principal
-      window.location.href = 'dashboard.html';
+// Redirección si todo es correcto
+window.location.href = 'dashboard.html';
 
     } catch (err) {
       console.error('Error inesperado:', err);
