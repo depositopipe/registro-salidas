@@ -151,12 +151,15 @@ button:active {
 .btn-danger { background: #ef4444; color: white; }
 .btn-danger:hover { background: #dc2626; }
 
-/* Contenido Principal con Grid Responsivo */
+/* Contenedor Principal Unificado: Formulario arriba e historial abajo en todas las pantallas */
 .main-content {
     padding: 30px;
-    display: grid;
-    grid-template-columns: 320px 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
 }
 
 .panel-card {
@@ -164,7 +167,7 @@ button:active {
     padding: 25px;
     border-radius: 12px;
     border: 1px solid #334155;
-    height: fit-content;
+    width: 100%;
 }
 
 .panel-card h3 {
@@ -196,6 +199,7 @@ button:active {
     border-radius: 12px;
     border: 1px solid #334155;
     overflow-x: auto;
+    width: 100%;
 }
 
 .tabla-contenedor h3 {
@@ -223,11 +227,9 @@ th {
     font-weight: 600;
 }
 
-/* Diseño Adaptativo para Celulares y Tablets */
+/* Ajustes responsivos para cabecera y menús */
 @media (max-width: 900px) {
     .main-content {
-        /* Fuerza a que el formulario y la tabla se coloquen uno debajo del otro */
-        grid-template-columns: 1fr;
         padding: 15px;
         gap: 20px;
     }
@@ -246,7 +248,7 @@ th {
     .app-menu {
         padding: 12px 20px;
         justify-content: stretch;
-        flex-direction: column; /* Organiza los botones del menú y selector de fecha en columna en el celular */
+        flex-direction: column;
         align-items: stretch;
     }
 
