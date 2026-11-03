@@ -125,6 +125,7 @@ formLogin.addEventListener('submit', async (e) => {
         inputUsuario.value = '';
         inputPassword.value = '';
         mostrarAplicacion();
+    }
     } catch (error) {
         console.error("Error al iniciar sesión:", error);
         alert("Error al conectar con la base de datos.");
