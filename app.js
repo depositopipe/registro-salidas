@@ -14,9 +14,7 @@ if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
 
-const db = firebase.firestore();
-const salidasRef = db.collection('salidas');
-const usuariosRef = db.collection('usuarios');
+// Inicializar Firebase Firestore
 const db = firebase.firestore();
 const salidasRef = db.collection('salidas');
 const usuariosRef = db.collection('usuarios');
