@@ -1,31 +1,33 @@
 import { supabase } from './supabaseClient.js';
 
-const formLogin = document.getElementById('form-login');
-const inputEmail = document.getElementById('input-email');
-const inputPassword = document.getElementById('input-password');
-const btnSalir = document.getElementById('btn-salir');
+const loginForm = document.getElementById('loginForm'); // Asegúrate de que coincida con el id de tu formulario
 
-if (formLogin) {
-    formLogin.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const email = inputEmail.value.trim();
-        const password = inputPassword.value.trim();
+if (loginForm) {
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-        if (!email || !password) return;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
 
-        try {
-            const { data, error } = await supabase.auth.signInWithPassword({
-                email: email,
-                password: password,
-            });
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password,
+      });
 
-            if (error) throw error;
-            window.location.href = 'dashboard.html';
-        } catch (error) {
-            console.error('Error al iniciar sesión:', error.message);
-            alert('Credenciales incorrectas o error de conexión: ' + error.message);
-        }
-    });
+      if (error) {
+        alert('Credenciales incorrectas: ' + error.message);
+        return;
+      }
+
+      // Redirección relativa directa al dashboard
+      window.location.href = 'dashboard.html';
+
+    } catch (err) {
+      console.error('Error en el proceso de autenticación:', err);
+      alert('Ocurrió un error inesperado al intentar ingresar.');
+    }
+  });
 }
 
 export async function verificarSesion() {
