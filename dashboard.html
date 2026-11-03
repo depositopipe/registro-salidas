@@ -13,15 +13,18 @@
             <h1>Registro de Salidas</h1>
             <div class="user-info">
                 <span id="user-email-display">Cargando...</span>
-                <button id="btn-exportar-purgar" class="btn-warning" title="Descarga el historial a tu PC y libera espacio">📥 Exportar y Limpiar</button>
+                <button id="btn-exportar-purgar" class="btn-warning" title="Descarga el historial a tu PC en Excel y libera espacio">📥 Exportar a Excel y Limpiar</button>
                 <button id="btn-salir" class="btn-danger">Salir</button>
             </div>
         </header>
 
-        <!-- Menú de Navegación -->
+        <!-- Menú de Navegación y Filtros Temporales -->
         <nav class="app-menu">
-            <button id="btn-menu-salidas" class="menu-btn active">Salidas y Hoy</button>
-            <button id="btn-menu-historial" class="menu-btn">Historial General</button>
+            <button id="btn-menu-hoy" class="menu-btn">Hoy</button>
+            <button id="btn-menu-3dias" class="menu-btn">Últimos 3 Días</button>
+            <button id="btn-menu-semana" class="menu-btn">Última Semana</button>
+            <button id="btn-menu-mes" class="menu-btn">Último Mes</button>
+            <button id="btn-menu-general" class="menu-btn active">Historial General</button>
         </nav>
 
         <main class="main-content">
@@ -44,14 +47,14 @@
             <!-- Sección de Historial -->
             <div class="content-sections">
                 <section class="tabla-contenedor">
-                    <h3>Historial del Día</h3>
+                    <h3 id="titulo-tabla">Historial General Consolidado</h3>
                     <table>
                         <thead>
                             <tr>
                                 <th>Producto</th>
-                                <th>Cantidad</th>
-                                <th>Retirado por</th>
-                                <th>Fecha y Hora</th>
+                                <th>Cantidad Total</th>
+                                <th>Último Usuario</th>
+                                <th>Última Actualización</th>
                             </tr>
                         </thead>
                         <tbody id="tabla-registros-body">

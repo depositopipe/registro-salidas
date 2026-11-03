@@ -1,7 +1,6 @@
 import { supabase } from './supabaseClient.js';
-import { registrarSalida, cargarRegistros, agregarFilaALaTabla } from './pedidos.js';
+import { registrarSalida, cargarRegistros } from './pedidos.js';
 
-// Función para verificar la sesión directamente
 async function verificarSesion() {
     const { data: { session }, error } = await supabase.auth.getSession();
     if (error || !session) {
@@ -21,9 +20,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     const tablaCuerpo = document.getElementById('tabla-registros-body');
+    const tituloTabla = document.getElementById('titulo-tabla');
+
+    // Estado actual del filtro (null = Historial General por defecto)
+    let filtroActual = null;
 
     // Cargar datos iniciales
-    await cargarRegistros(tablaCuerpo);
+    await cargarRegistros(tablaCuerpo, filtroActual);
 
     // Escucha en tiempo real para nuevos registros
     supabase
@@ -32,8 +35,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             event: 'INSERT', 
             schema: 'public', 
             table: 'pedidos' 
-        }, payload => {
-            agregarFilaALaTabla(payload.new, tablaCuerpo);
+        }, () => {
+            // Recarga automática manteniendo el filtro seleccionado
+            cargarRegistros(tablaCuerpo, filtroActual);
         })
         .subscribe();
 
@@ -54,51 +58,90 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (resultado.success) {
                 inputProducto.value = '';
                 inputCantidad.value = '1';
+                // Recargar tabla de inmediato
+                cargarRegistros(tablaCuerpo, filtroActual);
             }
         });
     }
 
-    // Lógica del botón Salir (Cerrar sesión)
+    // Botón Salir (Cerrar sesión)
     const btnSalir = document.getElementById('btn-salir');
     if (btnSalir) {
         btnSalir.addEventListener('click', async () => {
-            const { error } = await supabase.auth.signOut();
-            if (error) {
-                alert('Error al cerrar sesión: ' + error.message);
-                return;
-            }
+            await supabase.auth.signOut();
             window.location.href = 'index.html';
         });
     }
 
-    // Lógica de los botones de navegación (Menú)
-    const btnMenuSalidas = document.getElementById('btn-menu-salidas');
-    const btnMenuHistorial = document.getElementById('btn-menu-historial');
-    const panelFormulario = document.querySelector('.panel-card');
+    // Botones de Filtros Temporales y Navegación
+    const btnHoy = document.getElementById('btn-menu-hoy');
+    const btn3Dias = document.getElementById('btn-menu-3dias');
+    const btnSemana = document.getElementById('btn-menu-semana');
+    const btnMes = document.getElementById('btn-menu-mes');
+    const btnGeneral = document.getElementById('btn-menu-general');
 
-    if (btnMenuSalidas && btnMenuHistorial) {
-        btnMenuSalidas.addEventListener('click', () => {
-            btnMenuSalidas.classList.add('active');
-            btnMenuHistorial.classList.remove('active');
-            if (panelFormulario) panelFormulario.style.display = 'block';
+    const botonesFiltro = [btnHoy, btn3Dias, btnSemana, btnMes, btnGeneral];
+
+    function activarBoton(btnSeleccionado) {
+        botonesFiltro.forEach(b => {
+            if (b) b.classList.remove('active');
         });
+        if (btnSeleccionado) btnSeleccionado.classList.add('active');
+    }
 
-        btnMenuHistorial.addEventListener('click', () => {
-            btnMenuHistorial.classList.add('active');
-            btnMenuSalidas.classList.remove('active');
-            if (panelFormulario) panelFormulario.style.display = 'block';
+    if (btnHoy) {
+        btnHoy.addEventListener('click', () => {
+            filtroActual = 1;
+            activarBoton(btnHoy);
+            if (tituloTabla) tituloTabla.textContent = "Consolidado de Salidas - Hoy";
+            cargarRegistros(tablaCuerpo, filtroActual);
         });
     }
 
-    // Funcionalidad de Exportar y Purgar (Respaldo y limpieza de espacio)
+    if (btn3Dias) {
+        btn3Dias.addEventListener('click', () => {
+            filtroActual = 3;
+            activarBoton(btn3Dias);
+            if (tituloTabla) tituloTabla.textContent = "Consolidado - Últimos 3 Días";
+            cargarRegistros(tablaCuerpo, filtroActual);
+        });
+    }
+
+    if (btnSemana) {
+        btnSemana.addEventListener('click', () => {
+            filtroActual = 7;
+            activarBoton(btnSemana);
+            if (tituloTabla) tituloTabla.textContent = "Consolidado - Última Semana";
+            cargarRegistros(tablaCuerpo, filtroActual);
+        });
+    }
+
+    if (btnMes) {
+        btnMes.addEventListener('click', () => {
+            filtroActual = 30;
+            activarBoton(btnMes);
+            if (tituloTabla) tituloTabla.textContent = "Consolidado - Último Mes";
+            cargarRegistros(tablaCuerpo, filtroActual);
+        });
+    }
+
+    if (btnGeneral) {
+        btnGeneral.addEventListener('click', () => {
+            filtroActual = null;
+            activarBoton(btnGeneral);
+            if (tituloTabla) tituloTabla.textContent = "Historial General Consolidado";
+            cargarRegistros(tablaCuerpo, filtroActual);
+        });
+    }
+
+    // Funcionalidad de Exportar a Excel (CSV limpio con punto y coma) y Purgar
     const btnExportarPurgar = document.getElementById('btn-exportar-purgar');
     if (btnExportarPurgar) {
         btnExportarPurgar.addEventListener('click', async () => {
-            const confirmar = confirm("¿Estás seguro de exportar todo el historial a tu computadora y vaciar la base de datos para liberar espacio? Esta acción descargará un archivo CSV.");
+            const confirmar = confirm("¿Estás seguro de exportar todo el historial a tu computadora en formato Excel y vaciar la base de datos para liberar espacio?");
             if (!confirmar) return;
 
             try {
-                // 1. Consultar todos los registros actuales de Supabase
                 const { data, error } = await supabase
                     .from('pedidos')
                     .select('*')
@@ -110,38 +153,40 @@ document.addEventListener('DOMContentLoaded', async () => {
                     return;
                 }
 
-                // 2. Convertir los datos a formato CSV
-                let csvContent = "data:text/csv;charset=utf-8,Producto,Cantidad,Usuario,Fecha\n";
+                // Generar CSV con delimitador punto y coma (;) y BOM (\uFEFF) para compatibilidad total con Excel en español
+                let csvContent = "\uFEFFProducto;Cantidad;Usuario;Fecha\n";
                 data.forEach(row => {
-                    const filaStr = `"${row.producto}",${row.cantidad},"${row.usuario}","${row.fecha}"`;
-                    csvContent += filaStr + "\r\n";
+                    const fechaFormateada = new Date(row.fecha).toLocaleString();
+                    const productoLimpio = row.producto ? row.producto.replace(/"/g, '""') : '';
+                    const usuarioLimpio = row.usuario ? row.usuario.replace(/"/g, '""') : '';
+                    csvContent += `"${productoLimpio}";${row.cantidad};"${usuarioLimpio}";"${fechaFormateada}"\n`;
                 });
 
-                // 3. Crear enlace de descarga automática en el navegador
-                const encodedUri = encodeURI(csvContent);
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
                 const link = document.createElement("a");
-                link.setAttribute("href", encodedUri);
-                link.setAttribute("download", `historial_inventario_${new Date().toISOString().slice(0,10)}.csv`);
+                link.setAttribute("href", url);
+                link.setAttribute("download", `inventario_salidas_${new Date().toISOString().slice(0,10)}.csv`);
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
 
-                // 4. Purgar (Borrar) los registros de la tabla en Supabase para liberar espacio
+                // Purgar (Borrar) los registros de la tabla en Supabase
                 const { error: errorBorrado } = await supabase
                     .from('pedidos')
                     .delete()
-                    .neq('id', 0); // Borra todos los registros
+                    .neq('id', 0);
 
                 if (errorBorrado) {
                     alert("Se descargó el archivo, pero hubo un error al limpiar la base de datos: " + errorBorrado.message);
                 } else {
-                    alert("¡Historial exportado y base de datos purgada con éxito! Espacio liberado al 100%.");
-                    tablaCuerpo.innerHTML = ""; // Limpia la tabla visualmente
+                    alert("¡Historial exportado con éxito a Excel y base de datos purgada!");
+                    cargarRegistros(tablaCuerpo, filtroActual);
                 }
 
             } catch (err) {
-                console.error("Error en el proceso de exportación y purga:", err.message);
-                alert("Ocurrió un error al procesar el respaldo: " + err.message);
+                console.error("Error en exportación y purga:", err);
+                alert("Ocurrió un error al procesar el archivo: " + err.message);
             }
         });
     }
