@@ -14,7 +14,7 @@ if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
 
-// Inicializar Firebase Firestore (Declarado una sola vez)
+// Inicializar Firebase Firestore
 const db = firebase.firestore();
 const salidasRef = db.collection('salidas');
 const usuariosRef = db.collection('usuarios');
@@ -71,7 +71,6 @@ window.cambiarSeccion = function(seccion) {
         cargarListaUsuarios();
     }
 
-    // Ocultar el menú desplegable después de seleccionar una opción
     const menu = document.getElementById('dropdown-menu');
     if (menu) menu.classList.remove('show');
 };
@@ -125,7 +124,6 @@ formLogin.addEventListener('submit', async (e) => {
         inputUsuario.value = '';
         inputPassword.value = '';
         mostrarAplicacion();
-    }
     } catch (error) {
         console.error("Error al iniciar sesión:", error);
         alert("Error al conectar con la base de datos.");
