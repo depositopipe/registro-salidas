@@ -1,6 +1,15 @@
-import { verificarSesion } from './app.js';
-import { registrarSalida, cargarRegistros, agregarFilaALaTabla } from './pedidos.js';
 import { supabase } from './supabaseClient.js';
+import { registrarSalida, cargarRegistros, agregarFilaALaTabla } from './pedidos.js';
+
+// Función para verificar la sesión directamente
+async function verificarSesion() {
+    const { data: { session }, error } = await supabase.auth.getSession();
+    if (error || !session) {
+        window.location.href = 'index.html';
+        return null;
+    }
+    return session.user;
+}
 
 document.addEventListener('DOMContentLoaded', async () => {
     const user = await verificarSesion();
